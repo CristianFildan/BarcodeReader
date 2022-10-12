@@ -1,8 +1,8 @@
-// Global variables
 // TODO add more variables (pin and other)
 // REMARK: Try not to change other sections other then the TODO as this might cause chain reaction problems with the rest of the code. The transitions are tested.
 // Remark: Current ToDo's does not include writing to the database (putting new items to the Database);
 
+// Global variables
 const int buttonPin = 2;  // used for testing
 const int ledPin = 13;	  // used for testing
 const int time = 2000;
