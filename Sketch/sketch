@@ -1,0 +1,129 @@
+// Global variables
+// TODO add more variables (pin and other)
+// REMARK: Try not to change other sections other then the TODO as this might cause chain reaction problems with the rest of the code. The transitions are tested.
+// Remark: Current ToDo's does not include writing to the database (putting new items to the Database);
+
+const int buttonPin = 2;  // used for testing
+const int ledPin = 13;	  // used for testing
+const int time = 2000;
+int currentPos;
+
+
+// This function will run at the start:
+void setup() {
+  
+  /// TODO: get the position of the bottom servo and restore it to the default
+  Serial.begin(9600);
+
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT);
+}
+
+
+//This function will run repeatedly after the start:
+void loop() {
+  
+  // Check for button input
+  int button = ButtonReader();
+  if(button) {
+    
+    MotorMovement(button);
+    
+    delay(time); // delay used for testing purposes;
+    return;
+  }
+  
+  // Check for barcode input
+  String barcodeSeq = BarcodeReader();
+  if(!barcodeSeq.equals("Not detected")) {
+  	Serial.print("Barcode detected: ");
+    Serial.println(barcodeSeq);
+    
+    // Check Database and call motors if needed.
+    int binNumber = BarcodeDetected(barcodeSeq);
+    MotorMovement(binNumber);
+    
+    delay(time); // delay used for testing purposes;
+    return;
+  }
+}
+
+
+
+
+
+
+/*
+	BarcodeDetected check is the sequence is in the Database
+  @param seq -> the sequence of digits
+	@return int -> the corresponding bin or residual */
+  
+int BarcodeDetected(String seq) {
+   
+  int inDatabase;
+  /// TODO: Modify function to access Database
+  
+  inDatabase = 0; // testing value assuming that bins are numbered from 1 to 4
+  if(inDatabase)
+    return inDatabase;
+  
+  Serial.println("Not found in Database, awaiting button command");
+  while(!inDatabase)
+    inDatabase = ButtonReader();
+  
+  return inDatabase;
+}
+
+
+
+
+/*
+	MotorMovement first moves the bottom servo and then the top servo
+    @param bin -> the bin number where the trash should go */
+    
+void MotorMovement(int bin) {
+    
+  /// TODO: Move the bottom Servo
+  Serial.println("First Servo");
+  
+  /// TODO: Store the new position of bottom Servo in SD card
+  /// TODO: Move the top Servo
+  Serial.println("Second Servo");
+}
+
+
+
+/*
+	BarcodeReader looks for the values received through the camera
+    @return -> sequece of digits / "Not Detected" */
+    
+String BarcodeReader() {
+  String s = "Not detected";
+    
+  /// TODO: Modify function to read from the scanner
+    
+  Serial.println("Went through BarcodeReader");
+  return s;
+}
+
+
+
+
+
+/*
+	BurronReader awaits value change from the buttons
+    @return -> the button pressed / 0 if nothing is pressed */
+int ButtonReader() {
+  int buttonState = digitalRead(buttonPin);
+  
+  /// TODO: Modify function for more buttons
+  // Current version tests if code reacts to a single button pressed.
+  
+  if(buttonState == HIGH)
+  {
+    Serial.println("Button pressed!");
+    return 1;
+  }
+  else 
+    return 0;
+}
